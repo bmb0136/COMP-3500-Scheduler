@@ -5,7 +5,7 @@
 
 struct tqnode_t {
   struct task_t task;
-  struct tqnode_t *next;
+  struct tqnode_t *next, *prev;
 };
 
 struct taskqueue_t {
