@@ -23,12 +23,15 @@ int main(int argc, char** argv) {
   switch (config->policy) {
     case POL_FCFS:
       policy = &policy_fcfs;
+      policy_fcfs_init();
       break;
     case POL_SRTF:
       policy = &policy_srtf;
+      policy_srtf_init();
       break;
     case POL_RR:
       policy = &policy_rr;
+      policy_rr_init();
       break;
     default:
       puts("Error: invalid policy");
