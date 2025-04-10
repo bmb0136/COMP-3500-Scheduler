@@ -2,9 +2,10 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <strings.h>
 
-static struct task_t *readTaskList(FILE *file);
+static int readTaskList(FILE *file, struct task_t **list);
 
 struct config_t *config_parse(int argc, char **argv) {
   if (argc < 3 || argc > 4) {
@@ -21,7 +22,8 @@ struct config_t *config_parse(int argc, char **argv) {
     printf("Error: failed to open task list %s", argv[1]);
     return NULL;
   }
-  config->tasks = readTaskList(taskListFile);
+  config->numTasks = readTaskList(taskListFile, &config->tasks);
+  printf("Read %d tasks from %s\n", config->numTasks, argv[1]);
 
   enum PolicyType policy = -1;
   if (strcasecmp(argv[2], "fcfs")) {
@@ -52,12 +54,40 @@ struct config_t *config_parse(int argc, char **argv) {
   return config;
 }
 
-static struct task_t *readTaskList(FILE *file) {
-  // TODO
-  exit(1);
-}
-
 void config_destroy(struct config_t *config) {
   free(config->tasks);
   free(config);
+}
+
+static int readTaskList(FILE *file, struct task_t **list) {
+  int capacity = 8;
+  *list = (struct task_t*)malloc(capacity * sizeof(struct task_t));
+
+  int count = 0;
+  while (!feof(file)) {
+    int pid, start, burst;
+
+    int read = fscanf(file, "%d %d %d\n", &pid, &start, &burst);
+    if (read != 3) {
+      break;
+    }
+    assert(ferror(file) == 0);
+
+    (*list)[count] = (struct task_t){
+      .pid = pid,
+      .startTime = start,
+      .burstTime = burst 
+    };
+
+    count++;
+    if (count > capacity) {
+      capacity *= 2;
+      struct task_t* new = (struct task_t*)malloc(capacity * sizeof(struct task_t));
+      memcpy(new, *list, count * sizeof(struct task_t));
+      free(*list);
+      *list = new;
+    }
+  }
+
+  return count;
 }

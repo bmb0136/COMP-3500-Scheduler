@@ -6,13 +6,14 @@ enum PolicyType {
 };
 
 struct task_t {
-  int pid, arrivalTime, burstTime;
+  int pid, startTime, burstTime;
 };
 
 struct config_t {
   enum PolicyType policy;
   int timeQuantum;
   struct task_t *tasks;
+  int numTasks;
 };
 
 struct config_t *config_parse(int argc, char** argv);
