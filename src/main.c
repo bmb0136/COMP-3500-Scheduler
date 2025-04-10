@@ -1,9 +1,8 @@
-#include <stdio.h>
+#include "config.h"
 
 int main(int argc, char** argv) {
-  if (argc < 3 || argc > 4) {
-    puts("Usage: ./scheduler <task list> <FCFS | SRTF | RR> [time quantum*]");
-    puts("*Only used for RR mode");
+  struct config_t *config = config_parse(argc, argv);
+  if (!config) {
     return 1;
   }
 }

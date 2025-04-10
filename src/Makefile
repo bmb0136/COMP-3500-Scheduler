@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -g
 
 .PHONY: scheduler
-scheduler: main.o
+scheduler: main.o config.o
 	$(CC) $(CFLAGS) -o $@ $^ -o scheduler
 
 %.o: %.c %.h
