@@ -20,7 +20,6 @@ int taskqueue_pop(struct taskqueue_t *queue, struct task_t *output) {
   queue->start = queue->start->next;
 
   free(queue->start->prev);
-  queue->start->prev = NULL;
 
   queue->count--;
   if (queue->count == 0) {
