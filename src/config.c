@@ -26,11 +26,11 @@ struct config_t *config_parse(int argc, char **argv) {
   printf("Read %d tasks from %s\n", config->numTasks, argv[1]);
 
   enum PolicyType policy = -1;
-  if (strcasecmp(argv[2], "fcfs")) {
+  if (strcasecmp(argv[2], "fcfs") == 0) {
     policy = POL_FCFS;
-  } else if (strcasecmp(argv[2], "srtf")) {
+  } else if (strcasecmp(argv[2], "srtf") == 0) {
     policy = POL_SRTF;
-  } else if (strcasecmp(argv[2], "rr")) {
+  } else if (strcasecmp(argv[2], "rr") == 0) {
     policy = POL_RR;
   } else {
     puts("Error: Invalid policy, must be one of: FCFS, SRTF, RR");
