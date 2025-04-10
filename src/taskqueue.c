@@ -3,16 +3,24 @@
 
 static struct tqnode_t* newNode(struct task_t task);
 
+struct taskqueue_t* taskqueue_create() {
+  struct taskqueue_t* q = (struct taskqueue_t*)malloc(sizeof(struct taskqueue_t));
+  q->start = NULL;
+  q->end = NULL;
+  q->count = 0;
+  return q;
+}
+
 int taskqueue_pop(struct taskqueue_t *queue, struct task_t *output) {
   if (queue->count == 0) {
     return 0;
   }
 
-  struct tqnode_t *oldStart = queue->start;
-  *output = oldStart->task;
-  queue->start = oldStart->next;
+  *output = queue->start->task;
+  queue->start = queue->start->next;
 
-  free(oldStart);
+  free(queue->start->prev);
+  queue->start->prev = NULL;
 
   queue->count--;
   if (queue->count == 0) {

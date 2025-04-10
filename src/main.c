@@ -1,4 +1,5 @@
 #include "config.h"
+#include "taskqueue.h"
 
 int main(int argc, char** argv) {
   struct config_t *config = config_parse(argc, argv);
@@ -6,6 +7,12 @@ int main(int argc, char** argv) {
     return 1;
   }
 
+  struct taskqueue_t* queue = taskqueue_create();
+  for (int i = 0; i < config->numTasks; i++) {
+    taskqueue_push(queue, config->tasks[i]);
+  }
+
   config_destroy(config);
+  taskqueue_destroy(queue);
   return 0;
 }
