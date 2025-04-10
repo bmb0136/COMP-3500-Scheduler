@@ -32,6 +32,7 @@ int taskqueue_pop(struct taskqueue_t *queue, struct task_t *output) {
 
 void taskqueue_push(struct taskqueue_t *queue, struct task_t task) {
   struct tqnode_t *t = newNode(task);
+  t->task = task;
 
   if (queue->count == 0) {
     queue->start = queue->end = t;
