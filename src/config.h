@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "task.h"
+
 enum PolicyType {
   POL_FCFS, POL_SRTF, POL_RR
 };
