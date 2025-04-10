@@ -5,10 +5,6 @@ enum PolicyType {
   POL_FCFS, POL_SRTF, POL_RR
 };
 
-struct task_t {
-  int pid, startTime, burstTime;
-};
-
 struct config_t {
   enum PolicyType policy;
   int timeQuantum;
