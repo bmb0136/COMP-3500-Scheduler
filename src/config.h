@@ -17,4 +17,6 @@ struct config_t {
 
 struct config_t *config_parse(int argc, char** argv);
 
+void config_destroy(struct config_t *config);
+
 #endif

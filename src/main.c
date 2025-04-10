@@ -5,4 +5,7 @@ int main(int argc, char** argv) {
   if (!config) {
     return 1;
   }
+
+  config_destroy(config);
+  return 0;
 }

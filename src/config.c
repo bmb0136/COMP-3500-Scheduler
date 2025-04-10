@@ -1,12 +1,12 @@
 #include "config.h"
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
-#include <assert.h>
 
 static struct task_t *readTaskList(FILE *file);
 
-struct config_t *config_parse(int argc, char** argv) {
+struct config_t *config_parse(int argc, char **argv) {
   if (argc < 3 || argc > 4) {
     puts("Usage: ./scheduler <task list> <FCFS | SRTF | RR> [time quantum*]");
     puts("*Only used for RR mode");
@@ -55,4 +55,9 @@ struct config_t *config_parse(int argc, char** argv) {
 static struct task_t *readTaskList(FILE *file) {
   // TODO
   exit(1);
+}
+
+void config_destroy(struct config_t *config) {
+  free(config->tasks);
+  free(config);
 }
