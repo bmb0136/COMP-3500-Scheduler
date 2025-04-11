@@ -5,5 +5,4 @@ struct task_t {
   int pid, startTime, burstTime;
 };
 
-
 #endif

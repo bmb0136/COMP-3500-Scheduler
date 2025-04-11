@@ -3,9 +3,7 @@
 
 #include "task.h"
 
-enum PolicyType {
-  POL_FCFS, POL_SRTF, POL_RR
-};
+enum PolicyType { POL_FCFS, POL_SRTF, POL_RR };
 
 struct config_t {
   enum PolicyType policy;
@@ -14,7 +12,7 @@ struct config_t {
   int numTasks;
 };
 
-struct config_t *config_parse(int argc, char** argv);
+struct config_t *config_parse(int argc, char **argv);
 
 void config_destroy(struct config_t *config);
 

@@ -61,7 +61,7 @@ void config_destroy(struct config_t *config) {
 
 static int readTaskList(FILE *file, struct task_t **list) {
   int capacity = 8;
-  *list = (struct task_t*)malloc(capacity * sizeof(struct task_t));
+  *list = (struct task_t *)malloc(capacity * sizeof(struct task_t));
 
   int count = 0;
   while (!feof(file)) {
@@ -73,16 +73,14 @@ static int readTaskList(FILE *file, struct task_t **list) {
     }
     assert(ferror(file) == 0);
 
-    (*list)[count] = (struct task_t){
-      .pid = pid,
-      .startTime = start,
-      .burstTime = burst 
-    };
+    (*list)[count] =
+        (struct task_t){.pid = pid, .startTime = start, .burstTime = burst};
 
     count++;
     if (count > capacity) {
       capacity *= 2;
-      struct task_t* new = (struct task_t*)malloc(capacity * sizeof(struct task_t));
+      struct task_t *new =
+          (struct task_t *)malloc(capacity * sizeof(struct task_t));
       memcpy(new, *list, count * sizeof(struct task_t));
       free(*list);
       *list = new;
