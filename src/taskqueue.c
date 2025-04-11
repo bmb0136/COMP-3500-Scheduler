@@ -1,8 +1,6 @@
 #include "taskqueue.h"
 #include <stdlib.h>
 
-static struct tqnode_t* newNode(struct task_t task);
-
 struct taskqueue_t* taskqueue_create() {
   struct taskqueue_t* q = (struct taskqueue_t*)malloc(sizeof(struct taskqueue_t));
   q->start = NULL;
@@ -33,7 +31,9 @@ int taskqueue_pop(struct taskqueue_t *queue, struct task_t *output) {
 }
 
 void taskqueue_push(struct taskqueue_t *queue, struct task_t task) {
-  struct tqnode_t *t = newNode(task);
+  struct tqnode_t *t = (struct tqnode_t*)malloc(sizeof(struct tqnode_t));
+  t->next = NULL;
+  t->prev = NULL;
   t->task = task;
 
   if (queue->count == 0) {
@@ -58,12 +58,4 @@ void taskqueue_destroy(struct taskqueue_t *queue) {
   }
 
   free(queue);
-}
-
-static struct tqnode_t* newNode(struct task_t task) {
-  struct tqnode_t *n = (struct tqnode_t*)malloc(sizeof(struct tqnode_t));
-  n->next = NULL;
-  n->prev = NULL;
-  n->task = task;
-  return n;
 }
