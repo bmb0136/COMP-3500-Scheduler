@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
       break;
   }
 
-  simulation_run(policy);
+  simulation_run(config, policy);
 
   config_destroy(config);
   return 0;
