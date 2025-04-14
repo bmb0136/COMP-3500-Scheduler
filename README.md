@@ -3,5 +3,5 @@
 A simple CPU Scheduler that supports the following algorithms:
 
 - First Come First Serve
-- Shortest Job Next
+- Sortest Remaining Time First
 - Round Robin
