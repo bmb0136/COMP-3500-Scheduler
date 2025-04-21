@@ -1,17 +1,25 @@
 #include "policy.h"
-#include "taskheap.h"
 #include "taskqueue.h"
 
 static void init();
-static void run(struct pinput_t input, pemit_fp emit);
 static void destroy();
+static struct task_t get();
+static void finish(struct task_t task);
+static void add(struct task_t task);
+static void dec(struct task_t task);
+static size_t count();
 
 struct policy_t policy_fcfs_create() {
-  return (struct policy_t){.init = &init, .run = &run, .destroy = &destroy};
+  return (struct policy_t){.init = &init,
+                           .destroy = &destroy,
+                           .getCurrentTask = &get,
+                           .onTaskFinished = &finish,
+                           .addToReadyQueue = &add,
+                           .getReadyQueueCount = &count,
+                           .decerementBurstTime = &dec};
 }
 
 static struct taskqueue_t *queue;
-static struct taskheap_t *heap;
 
 static int compare(struct task_t *a, struct task_t *b) {
   int x = a->startTime - b->startTime;
@@ -23,69 +31,28 @@ static int compare(struct task_t *a, struct task_t *b) {
 
 static void init() {
   queue = taskqueue_create();
-  heap = taskheap_create(&compare);
 }
 
 static void destroy() {
   taskqueue_destroy(queue);
-  taskheap_destroy(heap);
 }
 
-static void run(struct pinput_t input, pemit_fp emit) {
-  unsigned int time = 0;
+struct task_t get() {
+  return queue->start->task;
+}
 
-  for (size_t i = 0; i < input.numTasks; i++) {
-    taskheap_push(heap, input.futureTasks[i]);
-  }
+void add(struct task_t task) {
+  taskqueue_push(queue, task);
+}
 
-  while (1) {
-    // Add tasks to ready queue
-    while (heap->count > 0 && time >= heap->items[0].startTime) {
-      taskqueue_push(queue, heap->items[0]);
-      taskheap_pop(heap, NULL);
-    }
+void finish(struct task_t task) {
+  taskqueue_pop(queue, NULL);
+}
 
-    // If no tasks to run, wait
-    if (queue->count == 0) {
+void dec(struct task_t task) {
+  queue->start->task.burstTime--;
+}
 
-      // If no more tasks, exit
-      if (heap->count == 0) {
-        emit((struct schedevent_t){.time = time, .type = SE_DONE});
-        return;
-      }
-
-      emit((struct schedevent_t){.time = time, .type = SE_WAIT});
-
-      time++;
-      continue;
-    }
-
-    struct task_t current = queue->start->task;
-
-    // If the task is done, go to the next task
-    if (current.burstTime == 0) {
-      emit((struct schedevent_t){
-          .time = time, .type = SE_FINISH, .data.task = current.pid});
-
-      taskqueue_pop(queue, NULL);
-
-      if (queue->count == 0) {
-
-        // If no more tasks, exit
-        if (heap->count == 0) {
-          emit((struct schedevent_t){.time = time, .type = SE_DONE});
-          return;
-        }
-
-        time++;
-        continue;
-      }
-    }
-
-    // Run current task
-    emit((struct schedevent_t){
-        .time = time, .type = SE_RUN, .data.task = current.pid});
-    queue->start->task.burstTime--;
-    time++;
-  }
+size_t count() {
+  return queue->count;
 }

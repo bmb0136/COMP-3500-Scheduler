@@ -21,12 +21,20 @@ typedef void(pemit_fp)(struct schedevent_t);
 
 struct policy_t {
   void (*init)();
-  void (*run)(struct pinput_t input, pemit_fp emit);
   void (*destroy)();
+  void (*addToReadyQueue)(struct task_t task);
+  size_t (*getReadyQueueCount)();
+  struct task_t (*getCurrentTask)();
+  void (*onTaskFinished)(struct task_t task);
+  void (*decerementBurstTime)(struct task_t task);
 };
 
 struct policy_t policy_fcfs_create();
 struct policy_t policy_srtf_create();
 struct policy_t policy_rr_create();
+
+void policy_init(struct policy_t policy);
+void policy_destroy(struct policy_t policy);
+void policy_run(struct policy_t policy, struct pinput_t input, pemit_fp emit);
 
 #endif

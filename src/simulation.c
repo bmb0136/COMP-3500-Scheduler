@@ -1,4 +1,5 @@
 #include "simulation.h"
+#include "policy.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +7,7 @@
 static void emit(struct schedevent_t event);
 
 void simulation_run(struct config_t *config, struct policy_t policy) {
-  policy.init();
+  policy_init(policy);
 
   struct pinput_t input;
 
@@ -16,9 +17,9 @@ void simulation_run(struct config_t *config, struct policy_t policy) {
   memcpy(input.futureTasks, config->tasks,
          config->numTasks * sizeof(struct task_t));
 
-  policy.run(input, &emit);
+  policy_run(policy, input, &emit);
 
-  policy.destroy();
+  policy_destroy(policy);
   free(input.futureTasks);
 }
 
