@@ -53,7 +53,7 @@ struct task_t *pidmap_get(struct pidmap_t *map, int pid) {
 }
 
 void pidmap_add(struct pidmap_t *map, struct task_t *task) {
-  if (map->count == map->capacity) {
+  if (map->count + 1 == map->capacity) {
     grow(map, map->capacity * 2);
   }
 

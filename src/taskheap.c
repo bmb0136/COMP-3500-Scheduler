@@ -1,24 +1,21 @@
 #include "taskheap.h"
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 
-static size_t parent(size_t i) {
-  return (i - 1) / 2;
-}
+static int parent(int i) { return (i - 1) / 2; }
 
-static size_t left(size_t i) {
-  return (2 * i) + 1;
-}
+static int left(int i) { return (2 * i) + 1; }
 
-static size_t right(size_t i) {
-  return (2 * i) + 2;
-}
+static int right(int i) { return (2 * i) + 2; }
 
-static void swap(struct taskheap_t *heap, size_t a, size_t b) {
+static void swap(struct taskheap_t *heap, int a, int b) {
   if (a == b) {
     return;
   }
+
+  assert(a >= 0 && a < heap->count);
+  assert(b >= 0 && b < heap->count);
 
   struct task_t temp = heap->items[a];
   heap->items[a] = heap->items[b];
@@ -49,10 +46,11 @@ void taskheap_destroy(struct taskheap_t *heap) {
 }
 
 void taskheap_push(struct taskheap_t *heap, struct task_t task) {
-  if (heap->count >= heap->capacity) {
+  if (heap->count + 1 >= heap->capacity) {
     heap->capacity *= 2;
     struct task_t *old = heap->items;
-    heap->items = (struct task_t*)malloc(heap->capacity * sizeof(struct task_t));
+    heap->items =
+        (struct task_t *)malloc(heap->capacity * sizeof(struct task_t));
     for (size_t i = 0; i < heap->count; i++) {
       struct task_t *t = &old[i];
       heap->items[i] = *t;
@@ -61,8 +59,7 @@ void taskheap_push(struct taskheap_t *heap, struct task_t task) {
     free(old);
   }
 
-
-  size_t i = heap->count++;
+  int i = heap->count++;
   heap->items[i] = task;
 
   while (i >= 0 && parent(i) >= 0 && compare(heap, i, parent(i)) < 0) {
@@ -74,12 +71,12 @@ void taskheap_push(struct taskheap_t *heap, struct task_t task) {
 }
 
 static void heapifyDown(struct taskheap_t *heap, int start) {
-  size_t i = start;
+  int i = start;
   while (i < heap->count) {
     int L = left(i);
     int R = right(i);
-    int cl = compare(heap, i, L) > 0;
-    int cr = compare(heap, i, R) > 0;
+    int cl = L < heap->count ? compare(heap, i, L) > 0 : 0;
+    int cr = R < heap->count ? compare(heap, i, R) > 0 : 0;
     char tiebreaker = 1;
     if (cl > 0 && cr > 0) {
       tiebreaker = compare(heap, L, R) < 0;
@@ -107,22 +104,22 @@ char taskheap_pop(struct taskheap_t *heap, struct task_t *output) {
 
   pidmap_remove(heap->pidmap, heap->items[0].pid);
 
-  if (--heap->count == 0) {
-    return 1;
+  if (heap->count > 1) {
+    swap(heap, 0, heap->count - 1);
+    heap->count--;
+    heapifyDown(heap, 0);
+  } else {
+    heap->count--;
   }
-
-  swap(heap, 0, heap->count);
-
-  heapifyDown(heap, 0);
 
   return 1;
 }
 
 void taskheap_updatekey(struct taskheap_t *heap, int pid, int key) {
-  
+
   struct task_t *oldPos = pidmap_get(heap->pidmap, pid);
 
-  size_t offset = oldPos - &heap->items[0];
+  int offset = oldPos - &heap->items[0];
   assert(offset >= 0 && offset < heap->count);
   assert(heap->items[offset].pid == pid);
 
