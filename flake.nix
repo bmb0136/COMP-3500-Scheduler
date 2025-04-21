@@ -17,18 +17,10 @@
       packages.scheduler = pkgs.stdenv.mkDerivation {
         name = "scheduler";
         src = ./src;
-        buildPhase = "make";
+        buildPhase = "make -j$(nproc)";
         installPhase = ''
           mkdir -p $out/bin
           cp scheduler $out/bin/
-        '';
-        dontStrip = true;
-      };
-      packages.debug = pkgs.writeShellApplication {
-        name = "debug";
-        runtimeInputs = [self.packages.${system}.scheduler pkgs.gdb];
-        text = ''
-          gdb scheduler
         '';
       };
     });
