@@ -16,6 +16,7 @@ void simulation_run(struct config_t *config, struct policy_t policy) {
   input.numTasks = config->numTasks;
   memcpy(input.futureTasks, config->tasks,
          config->numTasks * sizeof(struct task_t));
+  input.timeQuantum = config->timeQuantum;
 
   policy_run(policy, input, &emit);
 

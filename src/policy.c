@@ -31,11 +31,11 @@ void policy_run(struct policy_t policy, struct pinput_t input, pemit_fp emit) {
 
   while (1) {
     while (wait->count > 0 && time >= wait->items[0].startTime) {
-      policy.addToReadyQueue(wait->items[0]);
+      policy.addToReadyQueue(input, wait->items[0]);
       taskheap_pop(wait, NULL);
     }
 
-    if (policy.getReadyQueueCount() == 0) {
+    if (policy.getReadyQueueCount(input) == 0) {
       if (wait->count == 0) {
         emit((struct schedevent_t){.time = time, .type = SE_DONE});
         return;
@@ -45,13 +45,13 @@ void policy_run(struct policy_t policy, struct pinput_t input, pemit_fp emit) {
       continue;
     }
 
-    struct task_t current = policy.getCurrentTask();
+    struct task_t current = policy.getCurrentTask(input);
 
     if (current.burstTime == 0) {
       emit((struct schedevent_t){
           .time = time, .type = SE_FINISH, .data.task = current.pid});
-      policy.onTaskFinished(current);
-      if (policy.getReadyQueueCount() == 0) {
+      policy.onTaskFinished(input, current);
+      if (policy.getReadyQueueCount(input) == 0) {
         if (wait->count == 0) {
           emit((struct schedevent_t){.time = time, .type = SE_DONE});
           return;
@@ -60,12 +60,12 @@ void policy_run(struct policy_t policy, struct pinput_t input, pemit_fp emit) {
         time++;
         continue;
       }
-      current = policy.getCurrentTask();
+      current = policy.getCurrentTask(input);
     }
 
     emit((struct schedevent_t){
         .time = time, .type = SE_RUN, .data.task = current.pid});
-    policy.decerementBurstTime(current);
+    policy.decerementBurstTime(input, current);
     time++;
   }
 }

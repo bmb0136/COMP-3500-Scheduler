@@ -15,6 +15,7 @@ struct schedevent_t {
 struct pinput_t {
   struct task_t *futureTasks;
   size_t numTasks;
+  int timeQuantum;
 };
 
 typedef void(pemit_fp)(struct schedevent_t);
@@ -22,11 +23,11 @@ typedef void(pemit_fp)(struct schedevent_t);
 struct policy_t {
   void (*init)();
   void (*destroy)();
-  void (*addToReadyQueue)(struct task_t task);
-  size_t (*getReadyQueueCount)();
-  struct task_t (*getCurrentTask)();
-  void (*onTaskFinished)(struct task_t task);
-  void (*decerementBurstTime)(struct task_t task);
+  void (*addToReadyQueue)(struct pinput_t input, struct task_t task);
+  size_t (*getReadyQueueCount)(struct pinput_t input);
+  struct task_t (*getCurrentTask)(struct pinput_t input);
+  void (*onTaskFinished)(struct pinput_t input, struct task_t task);
+  void (*decerementBurstTime)(struct pinput_t input, struct task_t task);
 };
 
 struct policy_t policy_fcfs_create();

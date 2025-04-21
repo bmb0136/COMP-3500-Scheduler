@@ -3,11 +3,11 @@
 
 static void init();
 static void destroy();
-static struct task_t get();
-static void finish(struct task_t task);
-static void add(struct task_t task);
-static void dec(struct task_t task);
-static size_t count();
+static struct task_t get(struct pinput_t input);
+static void finish(struct pinput_t input, struct task_t task);
+static void add(struct pinput_t input, struct task_t task);
+static void dec(struct pinput_t input, struct task_t task);
+static size_t count(struct pinput_t input);
 
 struct policy_t policy_srtf_create() {
   return (struct policy_t){.init = &init,
@@ -37,22 +37,22 @@ static void destroy() {
   taskheap_destroy(heap);
 }
 
-struct task_t get() {
+struct task_t get(struct pinput_t input) {
   return heap->items[0];
 }
 
-void add(struct task_t task) {
+void add(struct pinput_t input, struct task_t task) {
   taskheap_push(heap, task);
 }
 
-void finish(struct task_t task) {
+void finish(struct pinput_t input, struct task_t task) {
   taskheap_pop(heap, NULL);
 }
 
-void dec(struct task_t task) {
+void dec(struct pinput_t input, struct task_t task) {
   taskheap_updatekey(heap, task.pid, task.burstTime - 1);
 }
 
-size_t count() {
+size_t count(struct pinput_t input) {
   return heap->count;
 }
