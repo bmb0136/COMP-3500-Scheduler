@@ -16,11 +16,15 @@ static size_t right(size_t i) {
 }
 
 static void swap(struct taskheap_t *heap, size_t a, size_t b) {
+  if (a == b) {
+    return;
+  }
+
   struct task_t temp = heap->items[a];
   heap->items[a] = heap->items[b];
   heap->items[b] = temp;
-  pidmap_update(heap->pidmap, heap->items[a].pid, &heap->items[b]);
-  pidmap_update(heap->pidmap, heap->items[b].pid, &heap->items[a]);
+  pidmap_update(heap->pidmap, heap->items[a].pid, &heap->items[a]);
+  pidmap_update(heap->pidmap, heap->items[b].pid, &heap->items[b]);
 }
 
 struct taskheap_t *taskheap_create() {
@@ -44,14 +48,19 @@ void taskheap_push(struct taskheap_t *heap, struct task_t task) {
     heap->capacity *= 2;
     struct task_t *old = heap->items;
     heap->items = (struct task_t*)malloc(heap->capacity * sizeof(struct task_t));
-    memcpy(heap->items, old, heap->count * sizeof(struct task_t));
+    for (size_t i = 0; i < heap->count; i++) {
+      struct task_t *t = &old[i];
+      heap->items[i] = *t;
+      pidmap_update(heap->pidmap, t->pid, &heap->items[i]);
+    }
     free(old);
   }
+
 
   size_t i = heap->count++;
   heap->items[i] = task;
 
-  while (i >= 0 && heap->items[i].burstTime < heap->items[parent(i)].burstTime) {
+  while (i >= 0 && parent(i) >= 0 && heap->items[i].burstTime < heap->items[parent(i)].burstTime) {
     swap(heap, i, parent(i));
     i = parent(i);
   }
@@ -69,16 +78,17 @@ char taskheap_pop(struct taskheap_t *heap, struct task_t *output) {
   }
 
   pidmap_remove(heap->pidmap, heap->items[0].pid);
-  heap->items[0] = heap->items[--heap->count];
+  swap(heap, 0, --heap->count);
+
 
   size_t i = 0;
   while (i < heap->count) {
     int L = left(i);
     int R = right(i);
-    if (heap->items[i].burstTime > heap->items[L].burstTime) {
+    if (L < heap->count && heap->items[i].burstTime > heap->items[L].burstTime) {
       swap(heap, i, L);
       i = L;
-    } else if (heap->items[i].burstTime > heap->items[R].burstTime) {
+    } else if (R < heap->count && heap->items[i].burstTime > heap->items[R].burstTime) {
       swap(heap, i, R);
       i = R;
     } else {
@@ -90,21 +100,24 @@ char taskheap_pop(struct taskheap_t *heap, struct task_t *output) {
 }
 
 void taskheap_updatekey(struct taskheap_t *heap, int pid, int key) {
-  struct task_t *oldPos = pidmap_get(heap->pidmap, pid);
   
-  assert(oldPos >= &heap->items[0] && oldPos <= &heap->items[heap->count - 1]);
+  struct task_t *oldPos = pidmap_get(heap->pidmap, pid);
 
-  swap(heap, 0, oldPos - &heap->items[0]);
+  size_t offset = oldPos - &heap->items[0];
+  assert(offset >= 0 && offset < heap->count);
+  assert(heap->items[offset].pid == pid);
+
+  swap(heap, 0, offset);
   heap->items[0].burstTime = key;
 
   size_t i = 0;
   while (i < heap->count) {
     int L = left(i);
     int R = right(i);
-    if (heap->items[i].burstTime > heap->items[L].burstTime) {
+    if (L < heap->count && heap->items[i].burstTime > heap->items[L].burstTime) {
       swap(heap, i, L);
       i = L;
-    } else if (heap->items[i].burstTime > heap->items[R].burstTime) {
+    } else if (R < heap->count && heap->items[i].burstTime > heap->items[R].burstTime) {
       swap(heap, i, R);
       i = R;
     } else {

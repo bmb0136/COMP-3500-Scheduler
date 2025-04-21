@@ -15,10 +15,9 @@ static char tryProbe(struct pidmap_t *map, int key, int *target, int *output) {
   int k = hash(map, key);
   int k2 = 1 + (k % (map->capacity - 1));
 
-  int i;
+  int i = k;
   struct pmkv_t current;
-  for (int n = 1; (current = map->pairs[k]).task; n++) {
-
+  for (int n = 1; (current = map->pairs[i]).task; n++) {
     if (target && current.pid == *target) {
       *output = i;
       return 1;
@@ -26,7 +25,6 @@ static char tryProbe(struct pidmap_t *map, int key, int *target, int *output) {
 
     i = (k + (k2 * n)) % map->capacity;
   }
-  k = i;
   *output = i;
 
   return 0;
@@ -62,9 +60,12 @@ void pidmap_add(struct pidmap_t *map, struct task_t *task) {
   int i;
   tryProbe(map, task->pid, NULL, &i);
 
+  assert(i >= 0 && i < map->capacity);
+
   map->pairs[i].pid = task->pid;
   map->pairs[i].task = task;
   map->count++;
+
 }
 
 void pidmap_remove(struct pidmap_t *map, int pid) {
@@ -92,11 +93,14 @@ static void grow(struct pidmap_t *map, int newSize) {
     .pairs = new
   };
   for (size_t i = 0; i < map->capacity; i++) {
-       struct task_t *t = map->pairs[i].task;
-    if (t) {
-      pidmap_add(&temp, t);
+    if (map->pairs[i].task == NULL) {
+      continue;
     }
+    int j;
+    tryProbe(&temp, map->pairs[i].pid, NULL, &j);
+    memcpy(&new[j], &map->pairs[i], sizeof(struct pmkv_t));
   }
+
 
   free(map->pairs);
   map->pairs = new;
