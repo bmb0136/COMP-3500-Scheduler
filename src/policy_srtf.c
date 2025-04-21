@@ -11,7 +11,15 @@ struct policy_t policy_srtf_create() {
 
 static struct taskheap_t *heap;
 
-static void init() { heap = taskheap_create(); }
+static int compare(struct task_t *a, struct task_t *b) {
+  int x = a->burstTime - b->burstTime;
+  if (x == 0) {
+    x = a->startTime - b->startTime;
+  }
+  return x;
+}
+
+static void init() { heap = taskheap_create(&compare); }
 
 static void destroy() { taskheap_destroy(heap); }
 
@@ -42,12 +50,13 @@ static void run(struct pinput_t input, pemit_fp emit) {
       continue;
     }
 
-    struct task_t *current = &heap->items[0];
+    struct task_t current = heap->items[0];
 
-    if (current->burstTime == 0) {
-      taskheap_pop(heap, NULL);
+    if (current.burstTime == 0) {
       emit((struct schedevent_t){
-          .time = time, .type = SE_FINISH, .data.task = current->pid});
+          .time = time, .type = SE_FINISH, .data.task = current.pid});
+      taskheap_pop(heap, NULL);
+      current = heap->items[0];
       if (heap->count == 0) {
         if (input.numTasks == 0) {
           emit((struct schedevent_t){.time = time, .type = SE_DONE});
@@ -59,9 +68,9 @@ static void run(struct pinput_t input, pemit_fp emit) {
       }
     }
 
-    taskheap_updatekey(heap, current->pid, --current->burstTime);
-
     emit((struct schedevent_t){
-        .time = time, .type = SE_RUN, .data.task = current->pid});
+        .time = time, .type = SE_RUN, .data.task = current.pid});
+    taskheap_updatekey(heap, current.pid, --current.burstTime);
+    time++;
   }
 }
