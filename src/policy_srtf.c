@@ -19,23 +19,23 @@ static void destroy() {
   taskheap_destroy(heap);
 }
 
-struct task_t get(struct pinput_t input) {
+static struct task_t get(struct pinput_t input) {
   return heap->items[0];
 }
 
-void add(struct pinput_t input, struct task_t task) {
+static void add(struct pinput_t input, struct task_t task) {
   taskheap_push(heap, task);
 }
 
-void finish(struct pinput_t input, struct task_t task) {
+static void finish(struct pinput_t input, struct task_t task) {
   taskheap_pop(heap, NULL);
 }
 
-void dec(struct pinput_t input, struct task_t task) {
+static void dec(struct pinput_t input, struct task_t task) {
   taskheap_updatekey(heap, task.pid, task.burstTime - 1);
 }
 
-size_t count(struct pinput_t input) {
+static size_t count(struct pinput_t input) {
   return heap->count;
 }
 

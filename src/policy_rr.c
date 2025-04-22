@@ -11,20 +11,20 @@ static void destroy() {
   taskring_destroy(ring);
 }
 
-struct task_t get(struct pinput_t input) {
+static struct task_t get(struct pinput_t input) {
   return ring->current->task;
 }
 
-void add(struct pinput_t input, struct task_t task) {
+static void add(struct pinput_t input, struct task_t task) {
   task.startTime = input.timeQuantum;
   taskring_push(ring, task);
 }
 
-void finish(struct pinput_t input, struct task_t task) {
+static void finish(struct pinput_t input, struct task_t task) {
   taskring_pop(ring, NULL);
 }
 
-void dec(struct pinput_t input, struct task_t task) {
+static void dec(struct pinput_t input, struct task_t task) {
   struct task_t *current = &ring->current->task;
   current->burstTime--;
   current->startTime--;
@@ -36,7 +36,7 @@ void dec(struct pinput_t input, struct task_t task) {
   }
 }
 
-size_t count(struct pinput_t input) {
+static size_t count(struct pinput_t input) {
   return ring->count;
 }
 
