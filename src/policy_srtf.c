@@ -1,24 +1,6 @@
 #include "policy.h"
 #include "taskheap.h"
 
-static void init();
-static void destroy();
-static struct task_t get(struct pinput_t input);
-static void finish(struct pinput_t input, struct task_t task);
-static void add(struct pinput_t input, struct task_t task);
-static void dec(struct pinput_t input, struct task_t task);
-static size_t count(struct pinput_t input);
-
-struct policy_t policy_srtf_create() {
-  return (struct policy_t){.init = &init,
-                           .destroy = &destroy,
-                           .getCurrentTask = &get,
-                           .onTaskFinished = &finish,
-                           .addToReadyQueue = &add,
-                           .getReadyQueueCount = &count,
-                           .decerementBurstTime = &dec};
-}
-
 static struct taskheap_t *heap;
 
 static int cmpByBurst(struct task_t *a, struct task_t *b) {
@@ -55,4 +37,14 @@ void dec(struct pinput_t input, struct task_t task) {
 
 size_t count(struct pinput_t input) {
   return heap->count;
+}
+
+struct policy_t policy_srtf_create() {
+  return (struct policy_t){.init = &init,
+                           .destroy = &destroy,
+                           .getCurrentTask = &get,
+                           .onTaskFinished = &finish,
+                           .addToReadyQueue = &add,
+                           .getReadyQueueCount = &count,
+                           .decerementBurstTime = &dec};
 }
