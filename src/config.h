@@ -3,8 +3,20 @@
 
 #include "task.h"
 
+/*
+ * enum PolicyType: A possible types of policies that are currently implemented
+ */
 enum PolicyType { POL_FCFS, POL_SRTF, POL_RR };
 
+/*
+ * struct config_t: Simulation configuration
+ *
+ * Fields:
+ * - policy: The policy to run
+ * - timeQuantum: The number of timesteps to run each task for before cycling to the next when using the POL_RR policy
+ * - tasks: The list of tasks to run
+ * - numTasks: The length of tasks
+ */
 struct config_t {
   enum PolicyType policy;
   int timeQuantum;
@@ -12,8 +24,16 @@ struct config_t {
   int numTasks;
 };
 
+/*
+ * config_parse(): Contruct a config_t from command line arguments. Returns NULL on failure
+ *
+ * Arguments: Same as main()
+ */
 struct config_t *config_parse(int argc, char **argv);
 
+/*
+ * Destructor
+ */
 void config_destroy(struct config_t *config);
 
 #endif

@@ -8,7 +8,12 @@ struct taskring_t *taskring_create() {
 }
 
 void taskring_destroy(struct taskring_t *ring) {
-  free(ring->items);
+  struct trnode_t *n = ring->current;
+  while (n) {
+    struct trnode_t *n2 = n->next;
+    free(n);
+    n = n2;
+  }
   free(ring);
 }
 
