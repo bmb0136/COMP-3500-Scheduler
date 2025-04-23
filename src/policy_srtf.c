@@ -11,8 +11,12 @@ static int cmpByBurst(struct task_t *a, struct task_t *b) {
   return x;
 }
 
+static void updateKey(struct task_t *task, int key) {
+  task->burstTime = key;
+}
+
 static void init() {
-  heap = taskheap_create(&cmpByBurst);
+  heap = taskheap_create(&cmpByBurst, &updateKey);
 }
 
 static void destroy() {

@@ -17,6 +17,15 @@
 typedef int (*thcmp_fp)(struct task_t *a, struct task_t *b);
 
 /*
+ * Delegate void thupdate_fp(): Update the priority of a task
+ *
+ * Arguments:
+ * - task: The task to update
+ * - key: The new priority
+ */
+typedef void (*thupdate_fp)(struct task_t *task, int key);
+
+/*
  * struct taskheap_t: Indexed Priority Queue of task_t
  *
  * Fields:
@@ -37,12 +46,13 @@ struct taskheap_t {
   int count;
   struct pidmap_t *pidmap;
   thcmp_fp comparator;
+  thupdate_fp keyUpdater;
 };
 
 /*
  * Constructor and Destructor methods
  */
-struct taskheap_t *taskheap_create(thcmp_fp comparator);
+struct taskheap_t *taskheap_create(thcmp_fp comparator, thupdate_fp keyUpdater);
 void taskheap_destroy(struct taskheap_t *heap);
 
 /*

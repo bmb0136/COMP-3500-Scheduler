@@ -28,7 +28,7 @@ static int compare(struct taskheap_t *heap, int a, int b) {
   return heap->comparator(&heap->items[a], &heap->items[b]);
 }
 
-struct taskheap_t *taskheap_create(thcmp_fp comparator) {
+struct taskheap_t *taskheap_create(thcmp_fp comparator, thupdate_fp keyUpdater) {
   struct taskheap_t *heap =
       (struct taskheap_t *)malloc(sizeof(struct taskheap_t));
   heap->count = 0;
@@ -36,6 +36,7 @@ struct taskheap_t *taskheap_create(thcmp_fp comparator) {
   heap->items = (struct task_t *)malloc(heap->capacity * sizeof(struct task_t));
   heap->pidmap = pidmap_create();
   heap->comparator = comparator;
+  heap->keyUpdater = keyUpdater;
   return heap;
 }
 
@@ -116,15 +117,13 @@ char taskheap_pop(struct taskheap_t *heap, struct task_t *output) {
 }
 
 void taskheap_updatekey(struct taskheap_t *heap, int pid, int key) {
+  struct task_t *pos = pidmap_get(heap->pidmap, pid);
+  heap->keyUpdater(pos, key);
 
-  struct task_t *oldPos = pidmap_get(heap->pidmap, pid);
-
-  int offset = oldPos - &heap->items[0];
+  int offset = pos - &heap->items[0];
   assert(offset >= 0 && offset < heap->count);
   assert(heap->items[offset].pid == pid);
 
   swap(heap, 0, offset);
-  heap->items[0].burstTime = key;
-
   heapifyDown(heap, 0);
 }

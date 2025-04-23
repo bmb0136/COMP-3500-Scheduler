@@ -11,8 +11,12 @@ static int cmpByStart(struct task_t *a, struct task_t *b) {
   return x;
 }
 
+static void updateKey(struct task_t *task, int key) {
+  task->startTime = key;
+}
+
 void policy_init(struct policy_t policy) {
-  wait = taskheap_create(&cmpByStart);
+  wait = taskheap_create(&cmpByStart, &updateKey);
   policy.init();
 }
 
