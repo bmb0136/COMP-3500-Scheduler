@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 1.4 4/23/25
+ *
+ * An Indexed Priority Queue
+ */
+
 #ifndef TASKHEAP_H
 #define TASKHEAP_H
 

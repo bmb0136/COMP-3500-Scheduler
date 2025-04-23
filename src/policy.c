@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 1.3 4/23/25
+ *
+ * Implementation of policy.h
+ */
+
 #include "policy.h"
 #include "taskheap.h"
 

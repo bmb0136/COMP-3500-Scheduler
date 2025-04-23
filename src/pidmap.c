@@ -1,3 +1,14 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 1.3 4/21/25
+ *
+ * Implementation of pidmap.h
+ *
+ * Uses open addressing + double hashing + multiplication method
+ */
+
 #include "pidmap.h"
 #include <assert.h>
 #include <stdlib.h>

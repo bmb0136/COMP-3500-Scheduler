@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 1.1 4/23/25
+ *
+ * Implementation of taskring.h
+ */
+
 #include "taskring.h"
 
 struct taskring_t *taskring_create() {

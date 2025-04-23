@@ -1,3 +1,13 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 3.4 4/23/25
+ *
+ * Implementation of the Shortest Remaining Time First policy
+ * Uses taskheap_t (sorted by burstTime) as a ready "queue"
+ */
+
 #include "policy.h"
 #include "taskheap.h"
 

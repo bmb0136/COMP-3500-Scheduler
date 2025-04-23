@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 1.2 4/23/25
+ *
+ * Implementation of stats.h
+ */
+
 #include "stats.h"
 #include "pidmap.h"
 #include "policy.h"

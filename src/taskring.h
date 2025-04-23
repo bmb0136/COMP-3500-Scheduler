@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 1.1 4/23/25
+ *
+ * A cyclic double linked list of task_t
+ */
+
 #ifndef TASKRING_H
 #define TASKRING_H
 

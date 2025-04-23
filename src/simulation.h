@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 2.4 4/23/25
+ *
+ * Code for running a policy simulation
+ */
+
 #ifndef SIMULATION_H
 #define SIMULATION_H
 

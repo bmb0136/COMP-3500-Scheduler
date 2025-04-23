@@ -1,3 +1,13 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 3.3 4/22/25
+ *
+ * Implementation of the First Come First Serve policy
+ * Uses taskqueue_t as a ready queue
+ */
+
 #include "policy.h"
 #include "taskqueue.h"
 

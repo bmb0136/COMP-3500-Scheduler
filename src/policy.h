@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 3.2 4/23/25
+ *
+ * Common functionality for all 3 policies
+ */
+
 #ifndef POLICY_H
 #define POLICY_H
 

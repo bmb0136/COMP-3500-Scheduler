@@ -1,3 +1,13 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 3.3 4/22/25
+ *
+ * Implementation of the Round Robin policy
+ * Uses taskring_t as a ready "queue"
+ */
+
 #include "policy.h"
 #include "taskring.h"
 

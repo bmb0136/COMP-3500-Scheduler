@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 3.2 4/23/25
+ *
+ * Implementation of simulation.h
+ */
+
 #include "simulation.h"
 #include "policy.h"
 #include "stats.h"

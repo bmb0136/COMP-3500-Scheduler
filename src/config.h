@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 1.7 4/23/25
+ *
+ * Command line argument parser
+ */
+
 #ifndef CONFIG_H
 #define CONFIG_H
 

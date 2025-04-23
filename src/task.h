@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 1.2 4/23/25
+ *
+ * Representation of tasks to run
+ */
+
 #ifndef TASK_H
 #define TASK_H
 

@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 1.12 4/11/25
+ *
+ * Program entrypoint
+ */
+
 #include "config.h"
 #include "simulation.h"
 #include <stdio.h>

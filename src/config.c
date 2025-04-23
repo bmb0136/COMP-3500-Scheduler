@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 1.4 4/11/25
+ *
+ * Implementation of config.h
+ */
+
 #include "config.h"
 #include <assert.h>
 #include <stdio.h>

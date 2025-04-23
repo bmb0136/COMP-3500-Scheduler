@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 1.4 4/23/25
+ *
+ * A Queue<struct task_t>
+ */
+
 #ifndef TASKQUEUE_H
 #define TASKQUEUE_H
 

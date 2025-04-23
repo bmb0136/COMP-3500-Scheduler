@@ -1,3 +1,12 @@
+/*
+ * COMP 3500 Project 5: CPU Scheduler
+ * Brandon Buckley
+ *
+ * Version 2.2 4/11/25
+ *
+ * Implementation of taskueue.h
+ */
+
 #include "taskqueue.h"
 #include <stdlib.h>
 
