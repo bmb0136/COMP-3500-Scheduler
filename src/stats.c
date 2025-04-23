@@ -76,10 +76,13 @@ struct summary_t stats_summarize(struct stats_t *stats) {
     response += t->firstRunTime - t->task.startTime;
   }
 
+  int count = stats->map->count;
+  int totalTime = stats->runs + stats->waits;
+
   return (struct summary_t){
-      .avgTurnaround = (float)turnAround / stats->map->count,
-      .avgWait = (float)wait / stats->map->count,
-      .avgResponse = (float)response / stats->map->count,
-      .utilization = (float)stats->runs / (stats->runs + stats->waits),
+      .avgTurnaround = count == 0 ? 0 : (float)turnAround / count,
+      .avgWait = count == 0 ? 0 : (float)wait / count,
+      .avgResponse = count == 0 ? 0 : (float)response / count,
+      .utilization = totalTime == 0 ? 0 : (float)stats->runs / totalTime,
   };
 }
