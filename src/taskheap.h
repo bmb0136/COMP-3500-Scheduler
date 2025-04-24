@@ -2,9 +2,9 @@
  * COMP 3500 Project 5: CPU Scheduler
  * Brandon Buckley
  *
- * Version 1.4 4/23/25
+ * Version 1.5 4/24/25
  *
- * An Indexed Priority Queue
+ * An Indexed Priority Queue of task_t
  */
 
 #ifndef TASKHEAP_H
@@ -43,6 +43,7 @@ typedef void (*thupdate_fp)(struct task_t *task, int key);
  * - count: The number of tasks in the IPQ
  * - pidmap: Maps each task's PID to its position in the heap
  * - comparator: A function that compares the priority of two tasks, used to enforce the heap property
+ * - keyUpdater: A function that updates the key for a task
  *
  * Remarks:
  * - An "Indexed Priority Queue" is a combination of a Heap and Hashmap that allows O(log n) updates to priorities.
