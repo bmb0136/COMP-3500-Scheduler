@@ -2,7 +2,7 @@
  * COMP 3500 Project 5: CPU Scheduler
  * Brandon Buckley
  *
- * Version 1.5 4/24/25
+ * Version 1.6 4/24/25
  *
  * Implementation of config.h
  */
@@ -86,7 +86,7 @@ static int readTaskList(FILE *file, struct task_t **list) {
         (struct task_t){.pid = pid, .startTime = start, .burstTime = burst};
 
     count++;
-    if (count > capacity) {
+    if (count >= capacity) {
       capacity *= 2;
       struct task_t *new =
           (struct task_t *)malloc(capacity * sizeof(struct task_t));

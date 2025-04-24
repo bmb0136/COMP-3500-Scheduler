@@ -2,7 +2,7 @@
  * COMP 3500 Project 5: CPU Scheduler
  * Brandon Buckley
  *
- * Version 1.12 4/11/25
+ * Version 1.13 4/24/25
  *
  * Program entrypoint
  */
@@ -15,6 +15,11 @@
 int main(int argc, char **argv) {
   struct config_t *config = config_parse(argc, argv);
   if (!config) {
+    return 1;
+  }
+
+  if (config->numTasks == 0) {
+    puts("No tasks specified");
     return 1;
   }
 

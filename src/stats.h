@@ -2,7 +2,7 @@
  * COMP 3500 Project 5: CPU Scheduler
  * Brandon Buckley
  *
- * Version 1.2 4/23/25
+ * Version 1.3 4/24/25
  *
  * Collects statstics during the simulation
  */
@@ -26,7 +26,7 @@
 struct tinfo_t {
   struct task_t task;
   char hasRun;
-  int firstRunTime, finishTime;
+  unsigned int firstRunTime, finishTime;
 };
 
 /*
@@ -39,7 +39,7 @@ struct tinfo_t {
  */
 struct stats_t {
   struct pidmap_t *map;
-  int waits, runs;
+  long waits, runs;
 };
 
 /*

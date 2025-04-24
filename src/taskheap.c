@@ -2,12 +2,13 @@
  * COMP 3500 Project 5: CPU Scheduler
  * Brandon Buckley
  *
- * Version 1.5 4/23/25
+ * Version 1.6 4/24/25
  *
  * Implementation of taskheap.h
  */
 
 #include "taskheap.h"
+#include "pidmap.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
@@ -121,17 +122,19 @@ char taskheap_pop(struct taskheap_t *heap, struct task_t *output) {
   } else {
     heap->count--;
   }
+  
 
   return 1;
 }
 
 void taskheap_updatekey(struct taskheap_t *heap, int pid, int key) {
   struct task_t *pos = pidmap_get(heap->pidmap, pid);
-  heap->keyUpdater(pos, key);
 
   int offset = pos - &heap->items[0];
   assert(offset >= 0 && offset < heap->count);
   assert(heap->items[offset].pid == pid);
+
+  heap->keyUpdater(pos, key);
 
   swap(heap, 0, offset);
   heapifyDown(heap, 0);
