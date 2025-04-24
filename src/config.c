@@ -2,7 +2,7 @@
  * COMP 3500 Project 5: CPU Scheduler
  * Brandon Buckley
  *
- * Version 1.4 4/11/25
+ * Version 1.5 4/24/25
  *
  * Implementation of config.h
  */
@@ -34,7 +34,7 @@ struct config_t *config_parse(int argc, char **argv) {
   config->numTasks = readTaskList(taskListFile, &config->tasks);
   printf("Read %d tasks from %s\n", config->numTasks, argv[1]);
 
-  enum PolicyType policy = -1;
+  enum policytype_e policy = -1;
   if (strcasecmp(argv[2], "fcfs") == 0) {
     policy = POL_FCFS;
   } else if (strcasecmp(argv[2], "srtf") == 0) {

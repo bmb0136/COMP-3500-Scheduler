@@ -2,7 +2,7 @@
  * COMP 3500 Project 5: CPU Scheduler
  * Brandon Buckley
  *
- * Version 1.7 4/23/25
+ * Version 1.8 4/24/25
  *
  * Command line argument parser
  */
@@ -15,7 +15,7 @@
 /*
  * enum PolicyType: A possible types of policies that are currently implemented
  */
-enum PolicyType { POL_FCFS, POL_SRTF, POL_RR };
+enum policytype_e { POL_FCFS, POL_SRTF, POL_RR };
 
 /*
  * struct config_t: Simulation configuration
@@ -27,7 +27,7 @@ enum PolicyType { POL_FCFS, POL_SRTF, POL_RR };
  * - numTasks: The length of tasks
  */
 struct config_t {
-  enum PolicyType policy;
+  enum policytype_e policy;
   int timeQuantum;
   struct task_t *tasks;
   int numTasks;
