@@ -2,7 +2,7 @@
  * COMP 3500 Project 5: CPU Scheduler
  * Brandon Buckley
  *
- * Version 1.2 4/23/25
+ * Version 2.0 4/24/25
  *
  * A HashMap<int, struct task_t*>
  */
@@ -11,6 +11,7 @@
 #define PIDMAP_H
 
 #include "task.h"
+#include <stdlib.h>
 
 /*
  * struct pmkv_t: A key value pair to be stored inside of a pidmap_t
@@ -18,10 +19,12 @@
  * Fields:
  * - pid: The key
  * - task: The value
+ * - next: Chain
  */
 struct pmkv_t {
   int pid;
   struct task_t *task;
+  struct pmkv_t *next;
 };
 
 /*
@@ -35,7 +38,7 @@ struct pmkv_t {
 struct pidmap_t {
   int count;
   int capacity;
-  struct pmkv_t *pairs;
+  struct pmkv_t **pairs;
 };
 
 /*
@@ -80,5 +83,14 @@ void pidmap_remove(struct pidmap_t *map, int pid);
  * - newValue: A new pointer to the task
  */
 void pidmap_update(struct pidmap_t *map, int pid, struct task_t *newValue);
+
+/*
+ * pidmap_setCapacity(): Grow the hash table to the specified size
+ *
+ * Arguments:
+ * - map: The map to grow
+ * - newSize: The new size, must be > map->count
+ */
+void pidmap_setCapacity(struct pidmap_t *map, size_t newSize);
 
 #endif

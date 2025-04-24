@@ -2,7 +2,7 @@
  * COMP 3500 Project 5: CPU Scheduler
  * Brandon Buckley
  *
- * Version 1.2 4/23/25
+ * Version 1.3 4/24/25
  *
  * Implementation of stats.h
  */
@@ -20,6 +20,7 @@ struct stats_t *stats_create(struct config_t *config) {
   struct stats_t *s = (struct stats_t *)malloc(sizeof(struct stats_t));
   memset(s, 0, sizeof(struct stats_t));
   s->map = pidmap_create();
+  pidmap_setCapacity(s->map, config->numTasks * 2);
   for (size_t i = 0; i < config->numTasks; i++) {
     struct tinfo_t *t = (struct tinfo_t *)malloc(sizeof(struct tinfo_t));
     memset(t, 0, sizeof(struct tinfo_t));
@@ -32,9 +33,11 @@ struct stats_t *stats_create(struct config_t *config) {
 
 void stats_destroy(struct stats_t *stats) {
   for (size_t i = 0; i < stats->map->capacity; i++) {
-    struct task_t *t = stats->map->pairs[i].task;
-    if (t) {
-      free((struct tinfo_t *)t);
+    struct pmkv_t *n = stats->map->pairs[i];
+    while (n) {
+      struct pmkv_t *temp = n;
+      n = n->next;
+      free((struct tinfo_t *)temp->task);
     }
   }
   pidmap_destroy(stats->map);
@@ -47,7 +50,6 @@ void stats_process(struct stats_t *stats, struct schedevent_t event) {
     return;
   }
   if (event.type == SE_DONE) {
-    // TODO
     return;
   }
 
@@ -71,22 +73,23 @@ void stats_process(struct stats_t *stats, struct schedevent_t event) {
 }
 
 struct summary_t stats_summarize(struct stats_t *stats) {
-  int turnAround = 0;
-  int wait = 0;
-  int response = 0;
+  long turnAround = 0;
+  long wait = 0;
+  long response = 0;
   for (size_t i = 0; i < stats->map->capacity; i++) {
-    if (!stats->map->pairs[i].task) {
-      continue;
+    struct pmkv_t *n = stats->map->pairs[i];
+    while (n) {
+      struct tinfo_t *t = (struct tinfo_t*)n->task;
+      long ta = t->finishTime - t->task.startTime;
+      turnAround += ta;
+      wait += ta - t->task.burstTime;
+      response += t->firstRunTime - t->task.startTime;
+      n = n->next;
     }
-    struct tinfo_t *t = (struct tinfo_t *)stats->map->pairs[i].task;
-    int ta = t->finishTime - t->task.startTime;
-    turnAround += ta;
-    wait += ta - t->task.burstTime;
-    response += t->firstRunTime - t->task.startTime;
   }
 
-  int count = stats->map->count;
-  int totalTime = stats->runs + stats->waits;
+  long count = stats->map->count;
+  long totalTime = stats->runs + stats->waits;
 
   return (struct summary_t){
       .avgTurnaround = count == 0 ? 0 : (float)turnAround / count,
