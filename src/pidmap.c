@@ -2,11 +2,13 @@
  * COMP 3500 Project 5: CPU Scheduler
  * Brandon Buckley
  *
- * Version 2.0 4/24/25
+ * Version 2.1 4/27/25
  *
  * Implementation of pidmap.h
  *
  * Uses closed addressing + multiplication method
+ *
+ * Sources: Notes from COMP 3270 and COMP 2210
  */
 
 #include "pidmap.h"

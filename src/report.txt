@@ -1,0 +1,20 @@
+# Description
+
+1. The policies are passed as an argument to the simulator (more specifically, a struct of function pointers. Effectively, it's an interface like Java).
+2. FCFS uses a queue as its ready queue, SRTF uses a heap (sorted by remaining time) as its ready queue, and RR uses a cyclic linked list as its ready queue.
+3. Subtracting the burst time of the task from the turnaround time.
+4. Subtracting the start time of the stask from the time that the task first starts running.
+5. Subtracting the start time of the task from the finish time.
+6. The command line parser is implemented using a function that takes argc and argv, and returns a config_t struct with the parsed values (or NULL on failure).
+
+# Generality
+
+1. All 3 policies follow the same general pattern, only differing by the way they store tasks and how they select the current task.
+2. A new policy can be added by implementing the functions specified in policy_t. Then the config code would need to be updated to instantiate a policy_t with pointers to these functions so it can be passed to the simulator.
+3. Yes (config_parse will return NULL if the input is invalid).
+
+# Misc
+
+1. Yes.
+2. My main "innovation" with my implementation is that I tried to use the most efficient methods that I knew of to run these algorithms. This required implementing some data structures, which was non-trivial since I used C and not C++.
+3. Yes (I really only needed to borrow some material from my notes from other classes to implement the data structures).

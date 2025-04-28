@@ -2,9 +2,11 @@
  * COMP 3500 Project 5: CPU Scheduler
  * Brandon Buckley
  *
- * Version 1.5 4/24/25
+ * Version 1.6 4/27/25
  *
  * An Indexed Priority Queue of task_t
+ *
+ * Sources: Notes from COMP 3270 and COMP 2210
  */
 
 #ifndef TASKHEAP_H

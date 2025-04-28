@@ -2,9 +2,11 @@
  * COMP 3500 Project 5: CPU Scheduler
  * Brandon Buckley
  *
- * Version 1.6 4/24/25
+ * Version 1.7 4/27/25
  *
  * Implementation of taskheap.h
+ *
+ * Sources: Notes from COMP 3270 and COMP 2210
  */
 
 #include "taskheap.h"
